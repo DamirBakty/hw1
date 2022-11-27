@@ -1,104 +1,107 @@
 # Task 1
-
 a = int(input())
 b = int(input())
 
-print((a ** 2 + b ** 2) ** 0.5)
-
+if a % 2 == 1:
+    for i in range(a+1,b + 1,2):
+        print(i, end=" ")
+else:
+    for i in range(a,b + 1,2):
+        print(i, end=" ")
 # Task 2
 
-num = input()
-print(num[1])
+a = int(input())
+
+for i in range(2,a+1):
+    if a % i == 0:
+        print(i)
+        break
 
 # Task 3
 
 a = int(input())
 
-try:
-    print(int(a / (a % 2)) + 1)
-except:
-    print(a + 2)
+for i in range(1, a+1):
+    if a % i == 0:
+        print(i, end=" ")
 
 # Task 4
 
 num = int(input())
+res = 0
 
-res = 9 * 60 + num * 45 + num // 2 * 5 + (num - 1) // 2 * 15
+for i in range(num):
+    res += int(input())
 
-print(res // 60, res - res // 60 * 60)
+print(res)
 
 # Task 5
 
-a = int(input())
-b = int(input())
+a = input()
+res = 0
 
-if a > b:
-    print(1)
-elif a < b:
-    print(2)
-else:
-    print(0)
+for i, num in enumerate(a):
+    res += int(num) * 2 ** (len(a) - 1 - i)
+
+print(res)
 
 # Task 6
 
-a = input()
-b = input()
-c = input()
-
-print(max(a,b,c))
-
-# Task 7
-
-x1 = input()
-y1 = input()
-x2 = input()
-y2 = input()
-
-if x1 == x2 or y1 == y2:
-    print("YES")
-else:
-    print("NO")
-
-# Task 8
+def power(a, b):
+    res = 1
+    for i in range(b):
+        res *= a
+    return res
 
 a = int(input())
 b = int(input())
-c = int(input())
 
-if a + b > c and a + c > b and c + b > a:
-    print("YES")
-else:
-    print("NO")
+print(power(a,b))
 
-# Task 9
+# # Task 7
 
-a = input()
-b = input()
-c = input()
-res = 0
+def election(x, y, z):
+    if x == y:
+        return x
+    return z
 
-if a == b and a != c:
-    print(2)
-elif a == c and a != b:
-    print(2)
-elif b == c and b != a:
-    print(2)
-elif a == b == c:
-    print(3)
-else:
-    print(0)
+x,y,z = input().split()
 
-# Task 10
+print(election(x,y,z))
 
-a = input()
-b = input()
-c = input()
+# Task 8
 
-if a >= b:
-    a,b = b,a
-if a >= c:
-    a,c = c,a
-if b >= c:
-    b,c = c,b
+VAL = 470
+init_wallet = {'USD': 0.0,
+               'KZT': 0.0}
+def add_money(amount: float, currency_kzt: bool):
+    if currency_kzt:
+        init_wallet['KZT'] += amount
+    else:
+        init_wallet['USD'] += amount
 
-print(a,b,c)
+def get_money(amount: float, currency_kzt: bool):
+    if currency_kzt:
+        if init_wallet['KZT'] >= amount:
+            init_wallet['KZT'] -= amount
+        else:
+            print("You do not have enough money")
+    else:
+        if init_wallet['USD'] >= amount:
+            init_wallet['USD'] -= amount
+        else:
+            print("You do not have enough money")
+def transfer(amount, currency1, currency2):
+    if currency1 == "USD" and currency2 == "KZT":
+        if init_wallet['USD'] >= amount:
+            init_wallet['USD'] -= amount * VAL
+            init_wallet['KZT'] += amount * VAL
+        else:
+            print("You do not have enough money")
+    else:
+        if init_wallet['KZT'] >= amount:
+            init_wallet['KZT'] -= amount * VAL
+            init_wallet['USD'] += amount * VAL
+        else:
+            print("You do not have enough money")
+
