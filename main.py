@@ -94,14 +94,16 @@ def get_money(amount: float, currency_kzt: bool):
 def transfer(amount, currency1, currency2):
     if currency1 == "USD" and currency2 == "KZT":
         if init_wallet['USD'] >= amount:
-            init_wallet['USD'] -= amount * VAL
+            init_wallet['USD'] -= VAL
             init_wallet['KZT'] += amount * VAL
         else:
             print("You do not have enough money")
     else:
         if init_wallet['KZT'] >= amount:
-            init_wallet['KZT'] -= amount * VAL
-            init_wallet['USD'] += amount * VAL
+            init_wallet['KZT'] -= VAL
+            init_wallet['USD'] += amount / VAL
         else:
             print("You do not have enough money")
+
+
 
