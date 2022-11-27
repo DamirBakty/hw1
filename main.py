@@ -105,5 +105,34 @@ def transfer(amount, currency1, currency2):
         else:
             print("You do not have enough money")
 
-
-
+while True:
+    print("1. Check your balance")
+    print("2. Add money")
+    print("3. Subtract money")
+    print("4. Transfer money")
+    print("5. Exit")
+    choice = input()
+    if choice == '1':
+        print(f'KZT: {init_wallet["KZT"]}')
+        print(f'USD: {init_wallet["USD"]}')
+    elif choice == '2':
+        money = float(input('Enter amount of money to add'))
+        currency = input("Enter currency of money")
+        if currency == "KZT":
+            add_money(money,True)
+        else:
+            add_money(money,False)
+    elif choice == '3':
+        money = float(input('Enter amount of money to subtract'))
+        currency = input("Enter currency of money")
+        if currency == "KZT":
+            get_money(money,True)
+        else:
+            get_money(money,False)
+    elif choice == '4':
+        money = float(input('Enter amount of money to transfer'))
+        curr1 = input("Enter from what currency to transfer")
+        curr2 = input("Enter to what currency to transfer")
+        transfer(money,curr1,curr2)
+    else:
+        break
