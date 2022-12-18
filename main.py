@@ -1,138 +1,90 @@
-# Task 1
-a = int(input())
-b = int(input())
+from dataclasses import dataclass, field
+from enum import Enum
+import copy
 
-if a % 2 == 1:
-    for i in range(a+1,b + 1,2):
-        print(i, end=" ")
-else:
-    for i in range(a,b + 1,2):
-        print(i, end=" ")
-# Task 2
+db = []
+class Account(Enum):
+    KZT = 'KZT'
+    RUB = 'RUB'
+    USD = 'USD'
+    prices = {
+         "KZT": 1,
+         "USD": 470,
+         "RUB": 7
+         }
 
-a = int(input())
 
-for i in range(2,a+1):
-    if a % i == 0:
-        print(i)
-        break
+@dataclass(frozen=True)
+class BankAccount:
+    name: str
+    surname: str
+    wallet: dict = field(default_factory=dict)
 
-# Task 3
+    def add_money(self, amount: float, currency: str):
+        if currency == Account.KZT.value:
+            self.wallet[Account.KZT.value] = self.wallet[Account.KZT.value] + amount if Account.KZT.value in self.wallet else amount
+            return
+        if currency == Account.RUB.value:
+            self.wallet[Account.RUB.value] = self.wallet[Account.RUB.value] + amount if Account.RUB.value in self.wallet else amount
+            return
+        if currency == Account.USD.value:
+            self.wallet[Account.USD.value] = self.wallet[Account.USD.value] + amount if Account.USD.value in self.wallet else amount
+            return
 
-a = int(input())
+    def subtract_money(self, amount: float, currency: str):
+        if currency == Account.KZT.value:
+            if not self.wallet[Account.KZT.value] or self.wallet[Account.KZT.value] < amount:
+                print("You do not have enough money!")
+                return
+            self.wallet[Account.KZT.value] -= amount
+            return
+        if currency == Account.RUB.value:
+            if not self.wallet[Account.RUB.value] or self.wallet[Account.RUB.value] < amount:
+                print("You do not have enough money!")
+                return
+            self.wallet[Account.RUB.value] -= amount
+            return
+        if currency == Account.USD.value:
+            if not self.wallet[Account.USD.value] or self.wallet[Account.USD.value] < amount:
+                print("You do not have enough money!")
+                return
+            self.wallet[Account.USD.value] -= amount
+            return
 
-for i in range(1, a+1):
-    if a % i == 0:
-        print(i, end=" ")
+    def transfer(self, amount: float, currency1: str, currency2: str):
+        if self.wallet[currency1] < amount\
+                or currency1 not in self.wallet:
+            print("You do not have enough money!")
+            return
+        self.wallet[currency1] -= amount
+        self.wallet[currency2] = self.wallet[currency2] + amount * (Account.prices.value[currency1] / Account.prices.value[currency2])\
+                                 if currency2 in self.wallet else amount * (Account.prices.value[currency1] / Account.prices.value[currency2])
 
-# Task 4
 
-num = int(input())
-res = 0
+    def __str__(self):
+        return f"Name: {self.name},\n" \
+               f"Surname: {self.surname},\n" \
+               f"Money: {self.wallet}"
 
-for i in range(num):
-    res += int(input())
 
-print(res)
-
-# Task 5
-
-a = input()
-res = 0
-
-for i, num in enumerate(a):
-    res += int(num) * 2 ** (len(a) - 1 - i)
-
-print(res)
-
-# Task 6
-
-def power(a, b):
-    res = 1
-    for i in range(b):
-        res *= a
-    return res
-
-a = int(input())
-b = int(input())
-
-print(power(a,b))
-
-# # Task 7
-
-def election(x, y, z):
-    if x == y:
-        return x
-    return z
-
-x,y,z = input().split()
-
-print(election(x,y,z))
-
-# Task 8
-
-VAL = 470
-init_wallet = {'USD': 0.0,
-               'KZT': 0.0}
-def add_money(amount: float, currency_kzt: bool):
-    if currency_kzt:
-        init_wallet['KZT'] += amount
-    else:
-        init_wallet['USD'] += amount
-
-def get_money(amount: float, currency_kzt: bool):
-    if currency_kzt:
-        if init_wallet['KZT'] >= amount:
-            init_wallet['KZT'] -= amount
-        else:
-            print("You do not have enough money")
-    else:
-        if init_wallet['USD'] >= amount:
-            init_wallet['USD'] -= amount
-        else:
-            print("You do not have enough money")
-def transfer(amount, currency1, currency2):
-    if currency1 == "USD" and currency2 == "KZT":
-        if init_wallet['USD'] >= amount:
-            init_wallet['USD'] -= VAL
-            init_wallet['KZT'] += amount * VAL
-        else:
-            print("You do not have enough money")
-    else:
-        if init_wallet['KZT'] >= amount:
-            init_wallet['KZT'] -= VAL
-            init_wallet['USD'] += amount / VAL
-        else:
-            print("You do not have enough money")
 
 while True:
-    print("1. Check your balance")
-    print("2. Add money")
-    print("3. Subtract money")
-    print("4. Transfer money")
-    print("5. Exit")
+    print("1. Create bank account")
+    print("2. Choose bank account")
+    print("0. Exit")
     choice = input()
-    if choice == '1':
-        print(f'KZT: {init_wallet["KZT"]}')
-        print(f'USD: {init_wallet["USD"]}')
-    elif choice == '2':
-        money = float(input('Enter amount of money to add'))
-        currency = input("Enter currency of money")
-        if currency == "KZT":
-            add_money(money,True)
-        else:
-            add_money(money,False)
-    elif choice == '3':
-        money = float(input('Enter amount of money to subtract'))
-        currency = input("Enter currency of money")
-        if currency == "KZT":
-            get_money(money,True)
-        else:
-            get_money(money,False)
-    elif choice == '4':
-        money = float(input('Enter amount of money to transfer'))
-        curr1 = input("Enter from what currency to transfer")
-        curr2 = input("Enter to what currency to transfer")
-        transfer(money,curr1,curr2)
-    else:
+    if choice == "1":
+        name = input("Enter your name: ")
+        surname = input("Enter your surname: ")
+        account = BankAccount(name=name, surname=surname)
+        db.append(copy.deepcopy(account))
+    if choice == "2":
+        name = input("Enter your name: ")
+        surname = input("Enter your surname: ")
+        for acc in db:
+            if acc.name == name and acc.surname == surname:
+                account = acc
+                break
+        print(account)
+    if choice == "0":
         break
